@@ -1,4 +1,7 @@
 class PuzzleNode:
+    openQueue = []
+    closedQueue = []
+    # f = open("puzzleTrack.txt", "a")
     def __init__(self, _puzzle, _depth_g, _f_score):
         self.puzzle = _puzzle
         self.depth_g = _depth_g
