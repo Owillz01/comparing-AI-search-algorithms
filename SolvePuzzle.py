@@ -69,9 +69,17 @@ class SolvePuzzle:
         return False
 
     def solvePuzzle(self):
-        num = 5
         startPuz = self.initPuzzle()
-
+        a_star = {
+            "solution":"ffffff",
+            "opened": "",
+            "time":""
+        }
+        greedy = {
+            "solution":"",
+            "opened": "",
+            "time":""
+        }
         if self.isPuzsolvable(startPuz):
             goalPuz = self.initGoalPuzzle()
             # DrawBoard(self.puzzleSize, startPuz)
@@ -79,16 +87,23 @@ class SolvePuzzle:
             time1 = time()
             aStar =  self.a_star(startPuz, goalPuz)
             aStarTime = time() - time1
-            print('A* Solution is ', aStar[0])
-            print('Number of A* opened nodes is ', aStar[1])
-            print('A* Time:', aStarTime, "\n") 
+            a_star['solution'] = aStar[0]
+            a_star['opened'] = aStar[1]
+            a_star['time']= aStarTime
+            # print('A* Solution is ', aStar[0])
+            # print('Number of A* opened nodes is ', aStar[1])
+            # print('A* Time:', aStarTime, "\n") 
 
-            # time2 = time()
-            # greedyBS =  self.greedy(startPuz, goalPuz)
-            # greedyBSTime = time() - time2
+            time2 = time()
+            greedyBS =  self.greedy(startPuz, goalPuz)
+            greedyBSTime = time() - time2
+            greedy['solution'] = greedyBS[0]
+            greedy['opened'] = greedyBS[1]
+            greedy['time'] = greedyBSTime
             # print('Gredy BS Solution is ', greedyBS[0])
             # print('Number of greedy BS opened nodes is ', greedyBS[1])
             # print('greedy BS Time:', greedyBSTime, "\n")  
+        return (a_star, greedy)
     
 
 
@@ -149,5 +164,3 @@ class SolvePuzzle:
             # sort the openQueue array based on the value of f_score
             parentNode.openQueue.sort(key=self.sortOpenQueueNodes)
 
-puz = SolvePuzzle(3)
-puz.solvePuzzle()
