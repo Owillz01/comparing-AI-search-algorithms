@@ -41,32 +41,61 @@
         </form>
     </div>
     <div class="row justify-content-evenly">
-        {% if solution %}
+        
+        <div class="text-center col-12">
+            <h4>Outputs</h4>
+        </div>
+        {% if a_Start %}
         <div class="col-5 card p-3">
             <h4>A* Algorithm</h4>
             <div class="my-1">
-                <span class="title"> Goal:</span> <span> {{solution[0]["solution"]}}  </span>
+                <span class="title"> Goal:</span> <span> {{a_Start["solution"]}}  </span>
             </div>
             <div class="my-1">
-                <span class="title"> Opened Nodes: </span> <span> {{solution[0]["opened"]}} </span>
+                <span class="title"> Opened Nodes: </span> <span> {{a_Start["opened"]}} </span>
             </div>
             <div class="my-1">
-                <span class="title"> Total Time: </span> <span>{{solution[0]["time"]}} </span> 
-            </div>
-        </div>
-        <div class="col-5 card p-3">
-            <h4>Greedy Best Search Algorithm</h4>
-            <div class="my-1">
-                <span class="title"> Goal: </span> <span>{{solution[1]["solution"]}} </span> 
-            </div>
-            <div class="my-1">
-                <span class="title"> Opened Nodes: </span> <span> {{solution[1]["opened"]}} </span>
-            </div>
-            <div class="my-1">
-                <span class="title"> Total Time: </span> <span> {{solution[1]["time"]}}  </span>
+                <span class="title"> Total Time: </span> <span>{{a_Start["time"]}} </span> 
             </div>
         </div>
         {% endif %}
+        {% if greedy_best %}
+            <div class="col-5 card p-3">
+                <h4>Greedy Best Search Algorithm</h4>
+                <div class="my-1">
+                    <span class="title"> Goal: </span> <span>{{greedy_best["solution"]}} </span> 
+                </div>
+                <div class="my-1">
+                    <span class="title"> Opened Nodes: </span> <span> {{greedy_best["opened"]}} </span>
+                </div>
+                <div class="my-1">
+                    <span class="title"> Total Time: </span> <span> {{greedy_best["time"]}}  </span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row mt-5 justify-content-evenly">
+        <div class="text-center col-12">
+            <h4>Puzzles</h4>
+        </div>
+        {% for index, state in states %}
+            
+            <div class="col-3 card p-3 mx-1 my-2">
+                <div class="my-1">
+                    <span class="title"> Index:</span>{{index}} <span>   </span>
+                </div>
+                <div class="my-1">
+                    <span class="title"> Start:</span>{{state['start']}} <span>   </span>
+                </div>
+                <div class="my-1">
+                    <span class="title"> Goal: </span>{{state['goal']}} <span>  </span>
+                </div>
+                <div class="my-1">
+                    <span class="title"> Minimum moves: </span> {{state['steps']}} <span> </span> 
+                </div>
+            </div>
+        {% endfor %}
+        
     </div>
 </body>
 </html>

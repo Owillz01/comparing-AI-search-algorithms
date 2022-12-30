@@ -1,6 +1,7 @@
 class PuzzleNode:
     openQueue = []
-    closedQueue = []
+    # closedQueue = []
+    closedQueue = set()
     # f = open("puzzleTrack.txt", "a")
     def __init__(self, _puzzle, _depth_g, _f_score):
         self.puzzle = _puzzle
@@ -14,12 +15,22 @@ class PuzzleNode:
                 if self.puzzle[row][col] == 0:
                     return row, col
 
+    def duplicateNodePuzzle(self,puzzle):
+        temp_puzzle = []
+        for i in puzzle:
+            rows = []
+            for j in i:
+                rows.append(j)
+            temp_puzzle.append(rows)
+        return temp_puzzle
+
+
     def moveTiles(self, zeroRowIndex, zeroColIndex, newRowIndex, newColIndex):
         #  check that the new position index provided is not outside the env
         #  if it is outside the env return None else move the tile
         if newRowIndex >= 0 and newRowIndex < len(self.puzzle) and newColIndex >= 0 and newColIndex < len(self.puzzle):
             dupPuzzle = []
-            dupPuzzle = self.puzzle.copy()
+            dupPuzzle = self.duplicateNodePuzzle(self.puzzle)
             # get the current value of 0's new position
             currentValue = dupPuzzle[newRowIndex][newColIndex]  
             # swap positions for both tiles   

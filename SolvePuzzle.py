@@ -2,7 +2,7 @@ from array import ArrayType
 from time import time
 from tokenize import Number
 import numpy as np
-from DrawBoard import DrawBoard
+# from DrawBoard import DrawBoard
 
 from PuzzleNode import PuzzleNode
 
@@ -14,8 +14,8 @@ class SolvePuzzle:
     def __init__(self, index:Number,):
         self.puzzleSize = 3
         self.puzzleInstance = pz.getstateInstance(index)
-        # self.openQueue = []
-        # self.closedQueue = []
+        self.openQueue = []
+        self.closedQueue = []
 
     def initPuzzle(self):  
         temp_array = np.array(self.puzzleInstance['start'])
@@ -41,15 +41,19 @@ class SolvePuzzle:
         return count
 
     def sortOpenQueueNodes(self, nodesList:PuzzleNode):
-        return nodesList.f_score
+        return lambda nodesList:nodesList.f_score
     
     def preventRevisitingOfNode(self, child, parentNode:PuzzleNode):
-        isFound = False
-        if len(parentNode.closedQueue) > 0:
-            # .all() compares all the elements of the array and only return true if they all exist
-            if (child.puzzle == parentNode.closedQueue[-1].puzzle).all():
-                print("it exist!!!")
-                isFound = True
+        isFound = True
+        # if len(parentNode.closedQueue) > 0:
+        #     # .all() compares all the elements of the array and only return true if they all exist
+        #     if (child.puzzle == parentNode.closedQueue[-1].puzzle).all():
+        #         print("it exist!!!")
+        #         isFound = True
+        # return isFound
+        if child not in  parentNode.closedQueue:
+            # print("it exist!!!")
+            isFound = False
         return isFound
             
     #count the number of inversions       
@@ -67,14 +71,28 @@ class SolvePuzzle:
         if (inv_counter %2 == 0):
             return True
         return False
+        
 
-    def solvePuzzle(self):
+    def solvePuzzleA_star(self):
         startPuz = self.initPuzzle()
         a_star = {
             "solution":"ffffff",
             "opened": "",
             "time":""
         }
+        if self.isPuzsolvable(startPuz):
+            goalPuz = self.initGoalPuzzle()
+            time1 = time()
+            aStar =  self.a_star(startPuz, goalPuz)
+            aStarTime = time() - time1
+            a_star['solution'] = aStar[0]
+            a_star['opened'] = aStar[1]
+            a_star['time']= aStarTime 
+        return a_star
+    
+
+    def solvePuzzleGreedy(self):
+        startPuz = self.initPuzzle()
         greedy = {
             "solution":"",
             "opened": "",
@@ -82,28 +100,13 @@ class SolvePuzzle:
         }
         if self.isPuzsolvable(startPuz):
             goalPuz = self.initGoalPuzzle()
-            # DrawBoard(self.puzzleSize, startPuz)
-            
-            time1 = time()
-            aStar =  self.a_star(startPuz, goalPuz)
-            aStarTime = time() - time1
-            a_star['solution'] = aStar[0]
-            a_star['opened'] = aStar[1]
-            a_star['time']= aStarTime
-            # print('A* Solution is ', aStar[0])
-            # print('Number of A* opened nodes is ', aStar[1])
-            # print('A* Time:', aStarTime, "\n") 
-
-            time2 = time()
+            current_time = time()
             greedyBS =  self.greedy(startPuz, goalPuz)
-            greedyBSTime = time() - time2
+            greedyBSTime = time() - current_time
             greedy['solution'] = greedyBS[0]
             greedy['opened'] = greedyBS[1]
             greedy['time'] = greedyBSTime
-            # print('Gredy BS Solution is ', greedyBS[0])
-            # print('Number of greedy BS opened nodes is ', greedyBS[1])
-            # print('greedy BS Time:', greedyBSTime, "\n")  
-        return (a_star, greedy)
+        return greedy
     
 
 
@@ -117,11 +120,12 @@ class SolvePuzzle:
         parentNode.openQueue.append(parentNode)
         while True:
             node:PuzzleNode = parentNode.openQueue[0]
+            parentNode.depth_g += 1
             print("==================================================\n")
             # if there is no difference between currentNode puzzle and goal puzzle
             # we have solved the puzzle
             if (self.getHeuristicValue(node.puzzle, goalPuz) == 0):
-                print("Puzzle Solved!!!")
+                print("Puzzle Solved!!!", parentNode.depth_g)
                 return (node.puzzle, len(parentNode.closedQueue))
             else:
                 childrenNodes = node.expandCurrentNode()
@@ -131,11 +135,13 @@ class SolvePuzzle:
                         childNode.f_score = self.get_fValue(childNode, goalPuz)
                         parentNode.openQueue.append(childNode)
             # print(len(parentNode.closedQueue), "parentNode.closedQueue length")
-            parentNode.closedQueue.append(node)
+            parentNode.closedQueue.add(node)
             del parentNode.openQueue[0]
             # sort the openQueue array based on the value of f_score
-            parentNode.openQueue.sort(key=self.sortOpenQueueNodes)
+            parentNode.openQueue.sort(key=lambda nodesList:nodesList.f_score, reverse=False)
 
+    
+    
     def greedy(self, startPuz, goalPuz):
 
         parentNode = PuzzleNode(startPuz, 0, 0)
@@ -159,7 +165,7 @@ class SolvePuzzle:
                         childNode.f_score = self.getHeuristicValue(childNode.puzzle, goalPuz)
                         parentNode.openQueue.append(childNode)
             # print(len(parentNode.closedQueue), "parentNode.closedQueue length")
-            parentNode.closedQueue.append(node)
+            parentNode.closedQueue.add(node)
             del parentNode.openQueue[0]
             # sort the openQueue array based on the value of f_score
             parentNode.openQueue.sort(key=self.sortOpenQueueNodes)
