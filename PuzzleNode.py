@@ -1,12 +1,12 @@
 class PuzzleNode:
-    openQueue = []
-    # closedQueue = []
-    closedQueue = set()
+    
     # f = open("puzzleTrack.txt", "a")
     def __init__(self, _puzzle, _depth_g, _f_score):
         self.puzzle = _puzzle
         self.depth_g = _depth_g
         self.f_score = _f_score
+        self.openQueue = []
+        self.closedQueue = set()
     
     def getPositionOfIntZero(self):
         # it gets the row and column index of number 0 in the puzzle

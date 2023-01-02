@@ -43,10 +43,14 @@
     <div class="row justify-content-evenly">
         
         <div class="text-center col-12">
-            <h4>Outputs</h4>
+            <h4>Outputs For Index. {{puzIndex}}</h4>
         </div>
         {% if a_Start %}
         <div class="col-5 card p-3">
+            <div class="d-flex justify-content-between">
+                <h4>A* Algorithm</h4>
+                <p> {{a_Start["status"]}} </p>
+            </div>
             <h4>A* Algorithm</h4>
             <div class="my-1">
                 <span class="title"> Goal:</span> <span> {{a_Start["solution"]}}  </span>
@@ -55,13 +59,16 @@
                 <span class="title"> Opened Nodes: </span> <span> {{a_Start["opened"]}} </span>
             </div>
             <div class="my-1">
-                <span class="title"> Total Time: </span> <span>{{a_Start["time"]}} </span> 
+                <span class="title"> Total Time: </span> <span>{{a_Start["time"][:9]}} sec</span> 
             </div>
         </div>
         {% endif %}
         {% if greedy_best %}
             <div class="col-5 card p-3">
-                <h4>Greedy Best Search Algorithm</h4>
+                <div class="d-flex justify-content-between">
+                    <h4>Greedy Search</h4>
+                    <p> {{greedy_best["status"]}} </p>
+                </div>
                 <div class="my-1">
                     <span class="title"> Goal: </span> <span>{{greedy_best["solution"]}} </span> 
                 </div>
@@ -69,7 +76,7 @@
                     <span class="title"> Opened Nodes: </span> <span> {{greedy_best["opened"]}} </span>
                 </div>
                 <div class="my-1">
-                    <span class="title"> Total Time: </span> <span> {{greedy_best["time"]}}  </span>
+                    <span class="title"> Total Time: </span> <span> {{greedy_best["time"][:9]}}  sec</span>
                 </div>
             </div>
         {% endif %}
@@ -82,7 +89,7 @@
             
             <div class="col-3 card p-3 mx-1 my-2">
                 <div class="my-1">
-                    <span class="title"> Index:</span>{{index}} <span>   </span>
+                    <span class="title"> Index No.:</span> {{index}} <span>   </span>
                 </div>
                 <div class="my-1">
                     <span class="title"> Start:</span>{{state['start']}} <span>   </span>
